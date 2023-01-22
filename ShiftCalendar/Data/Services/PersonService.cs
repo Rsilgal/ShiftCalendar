@@ -5,31 +5,46 @@ namespace ShiftCalendar.Data.Services
 {
     public class PersonService : IPersonService
     {
+        private readonly HttpClient _http;
+
+        public PersonService(HttpClient http)
+        {
+            _http = http;
+        }
+
         public List<PersonModel> People { get; set; }
 
-        public Task<List<PersonModel>> CreatePerson(PersonModel person)
+        public async Task CreatePerson(PersonModel person)
         {
-            throw new NotImplementedException();
+            var result = await _http.PostAsJsonAsync("", person);
+            var response = await result.Content.ReadFromJsonAsync<List<PersonModel>>();
+            People = response;
         }
 
-        public Task<List<PersonModel>> DeletePerson(int id)
+        public async Task DeletePerson(int id)
         {
-            throw new NotImplementedException();
+            var result = await _http.DeleteAsync($"");
+            var response = await result.Content.ReadFromJsonAsync<List<PersonModel>>();
+            People = response;
         }
 
-        public Task<PersonModel> GetPeopleAsync()
+        public async Task GetPeopleAsync()
         {
-            throw new NotImplementedException();
+            var result = await _http.GetFromJsonAsync<List<PersonModel>>("");
+            People= result;
         }
 
-        public Task<List<PersonModel>> GetPeopleAsync(int id)
+        public async Task<PersonModel> GetPeopleAsync(int id)
         {
-            throw new NotImplementedException();
+            var result = await _http.GetFromJsonAsync<PersonModel>($"");
+            return result;
         }
 
-        public Task<List<PersonModel>> UpdatePerson(int id, PersonModel person)
+        public async Task UpdatePerson(int id, PersonModel person)
         {
-            throw new NotImplementedException();
+            var result = await _http.PutAsJsonAsync($"", person);
+            var response = await result.Content.ReadFromJsonAsync<List<PersonModel>>();
+            People = response;
         }
     }
 }
