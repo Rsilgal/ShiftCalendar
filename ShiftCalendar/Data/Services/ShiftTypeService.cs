@@ -5,31 +5,46 @@ namespace ShiftCalendar.Data.Services
 {
     public class ShiftTypeService : IShiftTypeService
     {
+        private readonly HttpClient _http;
+
+        public ShiftTypeService(HttpClient http)
+        {
+            _http = http;
+        }
+
         public List<ShiftTypeModel> ShiftTypes { get; set; }
 
-        public Task<List<ShiftTypeModel>> CreateShiftType(ShiftTypeModel shiftType)
+        public async Task CreateShiftType(ShiftTypeModel shiftType)
         {
-            throw new NotImplementedException();
+            var result = await _http.PostAsJsonAsync("", shiftType);
+            var response = await result.Content.ReadFromJsonAsync<List<ShiftTypeModel>>();
+            ShiftTypes = response;
         }
 
-        public Task<List<ShiftTypeModel>> DeleteShiftTypeAsync(int id)
+        public async Task DeleteShiftTypeAsync(int id)
         {
-            throw new NotImplementedException();
+            var result = await _http.DeleteAsync($"");
+            var response = await result.Content.ReadFromJsonAsync<List<ShiftTypeModel>>();
+            ShiftTypes = response;
         }
 
-        public Task<List<ShiftTypeModel>> GetShiftTypesAsync()
+        public async Task GetShiftTypesAsync()
         {
-            throw new NotImplementedException();
+            var result = await _http.GetFromJsonAsync<List<ShiftTypeModel>>("");
+            ShiftTypes = result;
         }
 
-        public Task<ShiftTypeModel> GetShiftTypesAsync(int id)
+        public async Task<ShiftTypeModel> GetShiftTypesAsync(int id)
         {
-            throw new NotImplementedException();
+            var result = await _http.GetFromJsonAsync<ShiftTypeModel>($"");
+            return result;
         }
 
-        public Task<List<ShiftTypeModel>> UpdateShiftTypeAsync(int id, ShiftTypeModel shiftType)
+        public async Task UpdateShiftTypeAsync(int id, ShiftTypeModel shiftType)
         {
-            throw new NotImplementedException();
+            var result = await _http.PutAsJsonAsync($"", shiftType);
+            var response = await result.Content.ReadFromJsonAsync<List<ShiftTypeModel>>();
+            ShiftTypes = response;
         }
     }
 }
