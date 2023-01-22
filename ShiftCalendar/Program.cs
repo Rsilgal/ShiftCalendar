@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using ShiftCalendar.Areas.Identity;
 using ShiftCalendar.Data;
+using ShiftCalendar.Data.Services;
+using ShiftCalendar.Data.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,12 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7075/") });
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ICalendarService, CalendarService>();
+builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<ISecuencyService, SecuencyService>();
+builder.Services.AddScoped<IShiftService, ShiftService>();
+builder.Services.AddScoped<IShiftTypeService, ShiftTypeService>();
 
 var app = builder.Build();
 
