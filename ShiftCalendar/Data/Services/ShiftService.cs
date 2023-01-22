@@ -5,31 +5,46 @@ namespace ShiftCalendar.Data.Services
 {
     public class ShiftService : IShiftService
     {
+        private readonly HttpClient _http;
+
+        public ShiftService(HttpClient http)
+        {
+            _http = http;
+        }
+
         public List<ShiftModel> Shifts { get; set; }
 
-        public Task<List<ShiftModel>> CreateShit(ShiftModel shift)
+        public async Task CreateShit(ShiftModel shift)
         {
-            throw new NotImplementedException();
+            var result = await _http.PostAsJsonAsync("", shift);
+            var response = await result.Content.ReadFromJsonAsync<List<ShiftModel>>();
+            Shifts = response;
         }
 
-        public Task<List<ShiftModel>> DeleteShiftAsync(int id)
+        public async Task DeleteShiftAsync(int id)
         {
-            throw new NotImplementedException();
+            var result = await _http.DeleteAsync($"");
+            var response = await result.Content.ReadFromJsonAsync<List<ShiftModel>>();
+            Shifts = response;
         }
 
-        public Task<ShiftModel> GetShiftAsync(int id)
+        public async Task<ShiftModel> GetShiftAsync(int id)
         {
-            throw new NotImplementedException();
+            var result = await _http.GetFromJsonAsync<ShiftModel>($"");
+            return result;
         }
 
-        public Task<List<ShiftModel>> GetShiftsAsync()
+        public async Task GetShiftsAsync()
         {
-            throw new NotImplementedException();
+            var result = await _http.GetFromJsonAsync<List<ShiftModel>>("");
+            Shifts = result;
         }
 
-        public Task<List<ShiftModel>> UpdateShiftAsync(int id, ShiftModel shift)
+        public async Task UpdateShiftAsync(int id, ShiftModel shift)
         {
-            throw new NotImplementedException();
+            var result = await _http.PutAsJsonAsync($"", shift);
+            var response = await result.Content.ReadFromJsonAsync<List<ShiftModel>>();
+            shift = response;
         }
     }
 }
