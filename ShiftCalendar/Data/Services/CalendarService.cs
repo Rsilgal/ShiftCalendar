@@ -5,31 +5,54 @@ namespace ShiftCalendar.Data.Services
 {
     public class CalendarService : ICalendarService
     {
+        private readonly HttpClient _http;
+        private readonly ApplicationDbContext _db;
+
+        public CalendarService(HttpClient http, ApplicationDbContext db)
+        {
+            _http = http;
+            _db = db;
+        }
         public List<CalendarModel> Calendars { get; set; }
 
-        public Task<List<CalendarModel>> CreateCalendar(CalendarModel model)
+        public async Task<List<CalendarModel>> CreateCalendar(CalendarModel model)
         {
-            throw new NotImplementedException();
+            var result = await _http.PostAsJsonAsync("", model);
+            var response = await result.Content.ReadFromJsonAsync<List<CalendarModel>>();
+            Calendars = response;
+            return await GetCalendarsAsync();
         }
 
-        public Task<List<CalendarModel>> DeleteCalendar(int id)
+        public async Task<List<CalendarModel>> DeleteCalendar(int id)
         {
-            throw new NotImplementedException();
+            var result = await _http.DeleteAsync($"");
+            var response = await result.Content.ReadFromJsonAsync<List<CalendarModel>>();
+            Calendars = response;
+            return await GetCalendarsAsync();
         }
 
-        public Task<CalendarModel> GetCalendarAsync(int id)
+        public async Task<CalendarModel> GetCalendarAsync(int id)
         {
-            throw new NotImplementedException();
+            var result = await _http.GetFromJsonAsync<CalendarModel>($"");
+            if (result != null)
+                return result;
+            return null;
         }
 
-        public Task<List<CalendarModel>> GetCalendarsAsync()
+        public async Task<List<CalendarModel>> GetCalendarsAsync()
         {
-            throw new NotImplementedException();
+            var result = await _http.GetFromJsonAsync<List<CalendarModel>>("");
+            Calendars = result;
+            return Calendars;
+
         }
 
-        public Task<List<CalendarModel>> UpdateCalendar(int id, CalendarModel model)
+        public async Task<List<CalendarModel>> UpdateCalendar(int id, CalendarModel model)
         {
-            throw new NotImplementedException();
+            var result = await _http.PutAsJsonAsync($"", model);
+            var response = await result.Content.ReadFromJsonAsync<List<CalendarModel>>();
+            Calendars = response;
+            return await GetCalendarsAsync();
         }
     }
 }
