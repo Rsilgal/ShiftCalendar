@@ -44,7 +44,7 @@ namespace ShiftCalendar.Data.Services
         {
             var result = await _http.PutAsJsonAsync($"", shift);
             var response = await result.Content.ReadFromJsonAsync<List<ShiftModel>>();
-            shift = response;
+            Shifts = response;
         }
     }
 }
