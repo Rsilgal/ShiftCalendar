@@ -7,6 +7,9 @@
 <h3>Nuevo Trabajador</h3>
 
 <EditForm Model="_person" OnValidSubmit="UpdatePerson">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
     <div class="form-floating">
         <InputText class="form-control" id="firstName" @bind-Value="_person.FirstName"></InputText>
         <label for="firstName">Nombre</label>
@@ -24,6 +27,7 @@
         </InputSelect>
         <label for="firstName">Nombre</label>
     </div>
+    <button class="btn btn-primary" type="submit">Actualizar</button>
 </EditForm>
 
 

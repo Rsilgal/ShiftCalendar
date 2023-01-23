@@ -17,10 +17,11 @@
         <InputText id="description" class="form-control" @bind-Value="Dto.Description"></InputText>
         <label for="description">Descripcion</label>
     </div>
+    <button class="btn btn-primary" type="submit">Crear</button>
 </EditForm>
 
 @code {
-    ShiftTypeDto Dto = new();
+    ShiftTypeModel Dto = new();
 
     async Task CreateShiftType()
     {

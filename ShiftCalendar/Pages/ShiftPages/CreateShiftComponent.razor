@@ -13,6 +13,9 @@
 else
 {
     <EditForm Model="Dto" OnValidSubmit="CreateShift">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
         <div class="form-floating">
             <InputText id="description" class="form-control" @bind-Value="Dto.Description"></InputText>
             <label for="description">Descripcion</label>
@@ -30,11 +33,12 @@ else
             </InputSelect>
             <label for="type">Tipo de turno</label>
         </div>
+        <button class="btn btn-primary" type="submit">Crear</button>
     </EditForm>
 }
 
 @code {
-    ShiftDto Dto = new();
+    ShiftModel Dto = new();
 
     protected override async Task OnInitializedAsync()
     {

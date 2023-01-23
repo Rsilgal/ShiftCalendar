@@ -14,6 +14,8 @@
 else
 {
     <EditForm Model="Dto" OnValidSubmit="CreateSecuency">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
         <div class="form-floating">
             <InputText id="name" class="form-control" @bind-Value=Dto.Name></InputText>
@@ -54,12 +56,12 @@ else
                 </InputSelect>
             }
         </div>
-        
+        <button class="btn btn-primary" type="submit">Crear</button>
     </EditForm>
 }
 
 @code {
-    SecuencyDto Dto = new();
+    SecuencyModel Dto = new();
     private DateTime _startDate = DateTime.UtcNow;
     private DateTime _endDate = DateTime.UtcNow;
     private int _numberOfDays { get; set; }

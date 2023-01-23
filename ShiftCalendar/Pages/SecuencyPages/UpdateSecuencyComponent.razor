@@ -14,6 +14,8 @@
 else
 {
     <EditForm Model="_secuency" OnValidSubmit="CreateSecuency">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
         <div class="form-floating">
             <InputText id="name" class="form-control" @bind-Value=_secuency.Name></InputText>
@@ -54,7 +56,7 @@ else
                 </InputSelect>
             }
         </div>
-        
+        <button class="btn btn-primary" type="submit">Actualizar</button>        
     </EditForm>
 }
 
