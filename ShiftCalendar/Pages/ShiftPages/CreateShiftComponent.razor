@@ -1,0 +1,49 @@
+﻿@page "/shift"
+@inject NavigationManager _navigation
+@inject IShiftService _service
+@inject IShiftTypeService _serviceType
+
+<PageTitle>Nuevo Turno</PageTitle>
+<h3>Nuevo Turno</h3>
+
+@if(_serviceType.ShiftTypes == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <EditForm Model="Dto" OnValidSubmit="CreateShift">
+        <div class="form-floating">
+            <InputText id="description" class="form-control" @bind-Value="Dto.Description"></InputText>
+            <label for="description">Descripcion</label>
+        </div>
+        <div class="form-floating">
+            <InputDate id="date" class="form-control" @bind-Value="Dto.Date"></InputDate>
+            <label for="date">Fecha</label>
+        </div>
+        <div class="form-floating">
+            <InputSelect id="type" class="form-control" @bind-Value="Dto.ShiftType.Id">
+                @foreach (var type in _serviceType.ShiftTypes)
+                {
+                    <option value="@type.Id">@type.Description</option>
+                }
+            </InputSelect>
+            <label for="type">Tipo de turno</label>
+        </div>
+    </EditForm>
+}
+
+@code {
+    ShiftDto Dto = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _serviceType.GetShiftTypesAsync();
+    }
+
+    async Task CreateShift()
+    {
+        await _service.CreateShit(Dto);
+        _navigation.NavigateTo("/shifts");
+    }
+}

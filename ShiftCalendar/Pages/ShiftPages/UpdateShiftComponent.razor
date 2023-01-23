@@ -1,0 +1,57 @@
+﻿@page "/shift/{id:int}"
+@inject NavigationManager _navigation
+@inject IShiftService _service
+@inject IShiftTypeService _serviceType
+
+<PageTitle>Editar Turno</PageTitle>
+<h3>Editar Turno</h3>
+
+@if(_serviceType.ShiftTypes == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <EditForm Model="_shift" OnValidSubmit="UpdateShift">
+        <div class="form-floating">
+            <InputText id="description" class="form-control" @bind-Value="_shift.Description"></InputText>
+            <label for="description">Descripcion</label>
+        </div>
+        <div class="form-floating">
+            <InputDate id="date" class="form-control" @bind-Value="_shift.Date"></InputDate>
+            <label for="date">Fecha</label>
+        </div>
+        <div class="form-floating">
+            <InputSelect id="type" class="form-control" @bind-Value="_shift.ShiftType.Id">
+                @foreach (var type in _serviceType.ShiftTypes)
+                {
+                    <option value="@type.Id">@type.Description</option>
+                }
+            </InputSelect>
+            <label for="type">Tipo de turno</label>
+        </div>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    ShiftModel _shift = new();
+
+    protected override Task OnParametersSetAsync()
+    {
+        _shift = _service.GetShiftAsync(Id);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _serviceType.GetShiftTypesAsync();
+    }
+
+    async Task UpdateShift()
+    {
+        await _service.UpdateShiftAsync(Id, _shift);
+        _navigation.NavigateTo("/shifts");
+    }
+}

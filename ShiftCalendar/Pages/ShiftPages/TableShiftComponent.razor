@@ -1,0 +1,63 @@
+﻿@page "/shifts"
+@inject NavigationManager _navigation
+@inject IShiftService _service
+
+<PageTitle>Turnos</PageTitle>
+<h3>Turnos</h3>
+
+@if(_service.Shifts == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Descripcion</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Editar</th>
+                <th>Borrar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var shift in _service.Shifts)
+            {
+                <tr>
+                    <td>@shift.Description</td>
+                    <td>@shift.Date</td>
+                    <td>@shift.ShiftType.Name</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" @onclick="() => EditShift(shift.Id)">
+                            <i class="oi oi-pencil"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" @onclick="() => DeleteShift(shift.Id)">
+                            <i class="oi oi-delete"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await _service.GetShiftsAsync();
+    }
+
+    void EditShift(int id)
+    {
+        _navigation.NavigateTo($"shift/{id}");
+    }
+
+    async Task DeleteShift(int id)
+    {
+        await _service.DeleteShiftAsync(id);
+        StateHasChanged();
+    }
+}
