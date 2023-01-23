@@ -1,0 +1,51 @@
+﻿@page "/person/{id:int}"
+@inject NavigationManager _navigation
+@inject IPersonService _service
+@inject IShiftService _serviceShift
+
+<PageTitle>Nuevo trabajador</PageTitle>
+<h3>Nuevo Trabajador</h3>
+
+<EditForm Model="_person" OnValidSubmit="UpdatePerson">
+    <div class="form-floating">
+        <InputText class="form-control" id="firstName" @bind-Value="_person.FirstName"></InputText>
+        <label for="firstName">Nombre</label>
+    </div>
+    <div class="form-floating">
+        <InputText class="form-control" id="lastName" @bind-Value="_person.LastName"></InputText>
+        <label for="lastName">Apellidos</label>
+    </div>
+    <div class="form-floating">
+        <InputSelect class="form-control" id="firstName" @bind-Value="_person.Shift.Id">
+            @foreach (var shift in _serviceShift.Shifts)
+            {
+                <option value="@shift.Id">@shift.Description</option>
+            }
+        </InputSelect>
+        <label for="firstName">Nombre</label>
+    </div>
+</EditForm>
+
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    PersonModel _person = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _serviceShift.GetShiftsAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _person = await _service.GetPeopleAsync(Id);
+    }
+
+    async Task UpdatePerson()
+    {
+        await _service.UpdatePerson(Id, _person);
+        _navigation.NavigateTo("/people");
+    }
+}

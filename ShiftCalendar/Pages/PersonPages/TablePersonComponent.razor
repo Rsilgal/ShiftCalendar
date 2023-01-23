@@ -1,0 +1,63 @@
+﻿@page "/people"
+@inject NavigationManager _navigation
+@inject IPersonService _service
+
+<PageTitle>Trabajadores</PageTitle>
+<h3>Trabajadores</h3>
+
+@if(_service.People == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Turno</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in _service.People)
+            {
+                <tr>
+                    <td>@person.FirstName</td>
+                    <td>@person.LastName</td>
+                    <td>@person.Shift.Description</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" @onclick="() => EditPerson(person.Id)">
+                            <i class="oi oi-pencil"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" @onclick="() => DeletePerson(person.Id)">
+                            <i class="oi oi-delete"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await _service.GetPeopleAsync();
+    }
+
+    async Task DeletePerson(int id)
+    {
+        await _service.DeletePerson(id);
+        StateHasChanged();
+    }
+
+    void EditPerson(int id)
+    {
+        _navigation.NavigateTo($"/person/{id}");
+    }
+}
