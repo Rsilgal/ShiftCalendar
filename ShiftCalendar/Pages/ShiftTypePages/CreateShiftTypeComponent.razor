@@ -1,0 +1,30 @@
+﻿@page "/shifttype"
+@inject NavigationManager _navigation
+@inject IShiftTypeService _service
+
+<PageTitle>Crear tipo de turn</PageTitle>
+<h3>Nuevo tipo de turno</h3>
+
+<EditForm Model="Dto" OnValidSubmit="CreateShiftType">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-floating">
+        <InputText id="name" class="form-control" @bind-Value="Dto.Name"></InputText>
+        <label for="name">Nombre</label>
+    </div>
+    <div class="form-floating">
+        <InputText id="description" class="form-control" @bind-Value="Dto.Description"></InputText>
+        <label for="description">Descripcion</label>
+    </div>
+</EditForm>
+
+@code {
+    ShiftTypeDto Dto = new();
+
+    async Task CreateShiftType()
+    {
+        await _service.CreateShiftType(Dto);
+        _navigation.NavigateTo("/shifttypes");
+    }
+}

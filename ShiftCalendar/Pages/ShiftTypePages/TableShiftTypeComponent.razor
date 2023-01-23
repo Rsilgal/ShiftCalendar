@@ -1,0 +1,61 @@
+﻿@page "/shifttypes"
+@inject NavigationManager _navigation
+@inject IShiftTypeService _service
+
+<PageTitle>Tipos de turno</PageTitle>
+<h3>Tipos de turno</h3>
+
+@if (_service.ShiftTypes == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var type in _service.ShiftTypes)
+            {
+                <tr>
+                    <td>@type.Name</td>
+                    <td>@type.Description</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" @onclick="() => EditShiftType(type.Id)">
+                            <i class="oi oi-pencil"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" @onclick="() => DeleteShiftType(type.Id)">
+                            <i class="oi oi-delete"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await _service.GetShiftTypesAsync();
+    }
+
+    void EditShiftType(int id)
+    {
+        _navigation.NavigateTo($"/shifttype/{id}");
+    }
+
+    async Task DeleteShiftType(int id)
+    {
+        await _service.DeleteShiftTypeAsync(id);
+        StateHasChanged();
+    }
+}

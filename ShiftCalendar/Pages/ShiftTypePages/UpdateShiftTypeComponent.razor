@@ -1,0 +1,38 @@
+﻿@page "/shifttype/{id:int}"
+@inject NavigationManager _navigation
+@inject IShiftTypeService _service
+
+<PageTitle>Editar tipo de turno</PageTitle>
+<h3>Editar tipo de turno</h3>
+
+<EditForm Model="_shiftType" OnValidSubmit="UpdateShiftType">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-floating">
+        <InputText id="name" class="form-control" @bind-Value="_shiftType.Name"></InputText>
+        <label for="name">Nombre</label>
+    </div>
+    <div class="form-floating">
+        <InputText id="description" class="form-control" @bind-Value="_shiftType.Description"></InputText>
+        <label for="description">Descripcion</label>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    ShiftTypeModel _shiftType = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _shiftType = await _service.GetShiftTypesAsync(Id);
+    }
+
+    async Task UpdateShiftType()
+    {
+        await _service.UpdateShiftTypeAsync(Id, _shiftType);
+        _navigation.NavigateTo("/shifttypes");
+    }
+}
