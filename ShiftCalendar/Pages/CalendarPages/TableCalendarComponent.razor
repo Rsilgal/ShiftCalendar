@@ -1,0 +1,61 @@
+﻿@page "/calendars"
+@inject NavigationManager _navigation
+@inject ICalendarService _service
+
+<h3>Tabla de Calendarios</h3>
+
+@if(_service.Calendars == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre del calendario</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var calendar in _service.Calendars)
+            {
+                <tr>
+                    <td>
+                        @calendar.Name
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" @onclick="() => EditCalendar(calendar.Id)">
+                            <i class="oi oi-pencil"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" @onclick="() => DeleteCalendar(calendar.Id)">
+                            <i class="oi oi-delete"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await _service.GetCalendarsAsync();
+    }
+
+    async Task DeleteCalendar(int id)
+    {
+        await _service.DeleteCalendar(id);
+        StateHasChanged();
+    }
+
+    void EditCalendar(int id)
+    {
+        _navigation.NavigateTo($"/calendar/{id}");
+    }
+}

@@ -1,0 +1,27 @@
+﻿@page "/calendar"
+@inject NavigationManager _navigation
+@inject ICalendarService _service
+
+<PageTitle>Nuevo Calendario</PageTitle>
+<h3>Nuevo Calendario</h3>
+
+<EditForm Model="Dto" OnValidSubmit="CreateCalendar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-floating">
+        <InputText id="name" class="form-control" @bind-bind-Value="Dto.Name"></InputText>
+        <label for="name">Nombre:</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Crear</button>
+</EditForm>
+
+@code {
+    CalendarDto Dto = new CalendarDto();
+
+    async void CreateCalendar()
+    {
+        await _service.CreateCalendar(Dto);
+        _navigation.NavigateTo("/calendars");
+    }
+}

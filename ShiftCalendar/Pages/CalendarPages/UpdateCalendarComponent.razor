@@ -1,0 +1,35 @@
+﻿@page "/calendar/{id:int}"
+@inject NavigationManager _navigation
+@inject ICalendarService _service
+
+<PageTitle>Editar Calendario</PageTitle>
+<h3>Nuevo Calendario</h3>
+
+<EditForm Model="_calendar" OnValidSubmit="UpdateCalendar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-floating">
+        <InputText id="name" class="form-control" @bind-Value="_calendar.Name"></InputText>
+        <label for="name">Nombre:</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Crear</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    CalendarModel _calendar = new CalendarModel();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _calendar = await _service.GetCalendarAsync(Id);
+    }
+
+    async void UpdateCalendar()
+    {
+        await _service.UpdateCalendar(Id, _calendar);
+        _navigation.NavigateTo("/calendars");
+    }
+}
