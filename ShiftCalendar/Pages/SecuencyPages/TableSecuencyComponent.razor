@@ -1,0 +1,63 @@
+﻿@page "/secuencies"
+@inject NavigationManager _navigation
+@inject ISecuencyService _service
+
+<PageTitle>Secuencias</PageTitle>
+<h3>Secuencias</h3>
+
+@if(_service.Secuencies == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Calendario</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var secuency in _service.Secuencies)
+            {
+                <tr>
+                    <td>@secuency.Name</td>
+                    <td>@secuency.Description</td>
+                    <td>@secuency.Calendar.Name</td>
+                    <td>
+                        <button type="button" class="btn btn-primary" @onclick="() => EditSecuency(secuency.Id)">
+                            <i class="oi oi-pencil"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-danger" @onclick="() => DeleteSecuency(secuency.Id)">
+                            <i class="oi oi-delete"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await _service.GetSecuenciesAsync();
+    }
+
+    void EditSecuency(int id)
+    {
+        _navigation.NavigateTo($"/secuency/{id}");
+    }
+
+    async Task DeleteSecuency(int id)
+    {
+        await _service.DeleteSecuencyAsync(id);
+        StateHasChanged();
+    }
+}

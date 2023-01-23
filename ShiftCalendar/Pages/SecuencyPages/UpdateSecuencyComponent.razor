@@ -1,0 +1,125 @@
+﻿@page "/secuency/{id:int}"
+@inject NavigationManager _navigation
+@inject ISecuencyService _service
+@inject IShiftTypeService _serviceType
+@inject ICalendarService _serviceCalendar
+
+<PageTitle>Editar secuencia</PageTitle>
+<h3>Editar secuencia</h3>
+
+@if (_serviceType.ShiftTypes == null || _serviceCalendar.Calendars == null)
+{
+    <p><em>Cargando...</em></p>
+}
+else
+{
+    <EditForm Model="_secuency" OnValidSubmit="CreateSecuency">
+
+        <div class="form-floating">
+            <InputText id="name" class="form-control" @bind-Value=_secuency.Name></InputText>
+            <label for="name">Nombre</label>
+        </div>
+        <div class="form-floating">
+            <InputText id="description" class="form-control" @bind-Value=_secuency.Description></InputText>
+            <label for="description">Descripcion</label>
+        </div>
+        <div>
+            <InputSelect class="form-select" @bind-Value="_secuency.Calendar.Id">
+                @foreach (var item in _serviceCalendar.Calendars)
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="form-floating">
+            <InputDate id="startDate" class="form-control" @bind-Value=_startDate></InputDate>
+            <label for="startDate">Fecha inicial</label>
+        </div>
+        <div class="form-floating">
+            <InputNumber id="number" class="form-control" @bind-Value=_numberOfDays @onchange="ChangeDaysOfSecuency"></InputNumber>
+            <label for="number">Numero de días de una secuencia</label>
+        </div>
+        <div class="form-floating">
+            <InputNumber id="number" class="form-control" @bind-Value=_numberOfSecuencies></InputNumber>
+            <label for="number">Numero de secuencias</label>
+        </div>
+        <div class="form-floating">
+            @foreach (var type in types)
+            {
+                <InputSelect class="form-select" @bind-Value="type.Id">
+                    @foreach (var item in _serviceType.ShiftTypes)
+                    {
+                        <option value="@item.Id">@item.Description</option>
+                    }
+                </InputSelect>
+            }
+        </div>
+        
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    SecuencyModel _secuency = new();
+    private DateTime _startDate = DateTime.UtcNow;
+    private DateTime _endDate = DateTime.UtcNow;
+    private int _numberOfDays { get; set; }
+    private int _numberOfSecuencies { get; set; }
+    private List<ShiftTypeModel> types { get; set; }
+    private List<ShiftModel> shifts { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _serviceCalendar.GetCalendarsAsync();
+        await _serviceType.GetShiftTypesAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _secuency = await _service.GetSecuencyAsync(Id);
+    }
+
+    async Task CreateSecuency()
+    {
+        List<ShiftTypeModel> typesFinal = GenerateListOfDays();
+        foreach (var element in typesFinal)
+        {
+            shifts.Add(new ShiftModel
+                {
+                    Description = "Generado automáticamente",
+                    Date = _startDate.AddDays(typesFinal.IndexOf(element) + 1),
+                    ShiftType = element
+                });
+        }
+
+        _secuency.Shift = shifts;
+
+        await _service.UpdateSecuencyAsync(Id, _secuency);
+        _navigation.NavigateTo("/secuencies");
+    }
+
+    List<ShiftTypeModel> GenerateListOfDays()
+    {
+        List<ShiftTypeModel> _list = new();
+
+        for (int i = 0; i < _numberOfSecuencies; i++)
+        {
+            foreach (var item in types)
+            {
+                _list.Add(item);
+            }            
+        }
+
+        return _list;
+    }
+
+    void ChangeDaysOfSecuency()
+    {
+        if (types.Count > 0)
+            types.Clear();
+
+        types.AddRange(Enumerable.Repeat(_serviceType.ShiftTypes.First(), _numberOfDays));
+    }
+}
