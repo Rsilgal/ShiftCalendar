@@ -16,33 +16,33 @@ namespace ShiftCalendar.Data.Services
 
         public async Task CreateShiftType(ShiftTypeModel shiftType)
         {
-            var result = await _http.PostAsJsonAsync("", shiftType);
+            var result = await _http.PostAsJsonAsync("/api/ShiftTypeModels", shiftType);
             var response = await result.Content.ReadFromJsonAsync<List<ShiftTypeModel>>();
             ShiftTypes = response;
         }
 
         public async Task DeleteShiftTypeAsync(int id)
         {
-            var result = await _http.DeleteAsync($"");
+            var result = await _http.DeleteAsync($"/api/ShiftTypeModels/{id}");
             var response = await result.Content.ReadFromJsonAsync<List<ShiftTypeModel>>();
             ShiftTypes = response;
         }
 
         public async Task GetShiftTypesAsync()
         {
-            var result = await _http.GetFromJsonAsync<List<ShiftTypeModel>>("");
+            var result = await _http.GetFromJsonAsync<List<ShiftTypeModel>>("/api/ShiftTypeModels");
             ShiftTypes = result;
         }
 
         public async Task<ShiftTypeModel> GetShiftTypesAsync(int id)
         {
-            var result = await _http.GetFromJsonAsync<ShiftTypeModel>($"");
+            var result = await _http.GetFromJsonAsync<ShiftTypeModel>($"/api/ShiftTypeModels/{id}");
             return result;
         }
 
         public async Task UpdateShiftTypeAsync(int id, ShiftTypeModel shiftType)
         {
-            var result = await _http.PutAsJsonAsync($"", shiftType);
+            var result = await _http.PutAsJsonAsync($"/api/ShiftTypeModels/{id}", shiftType);
             var response = await result.Content.ReadFromJsonAsync<List<ShiftTypeModel>>();
             ShiftTypes = response;
         }

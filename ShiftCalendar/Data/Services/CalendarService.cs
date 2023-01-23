@@ -15,21 +15,21 @@ namespace ShiftCalendar.Data.Services
 
         public async Task CreateCalendar(CalendarModel model)
         {
-            var result = await _http.PostAsJsonAsync("", model);
+            var result = await _http.PostAsJsonAsync("/api/CalendarModels", model);
             var response = await result.Content.ReadFromJsonAsync<List<CalendarModel>>();
             Calendars = response;
         }
 
         public async Task DeleteCalendar(int id)
         {
-            var result = await _http.DeleteAsync($"");
+            var result = await _http.DeleteAsync($"/api/CalendarModels/{id}");
             var response = await result.Content.ReadFromJsonAsync<List<CalendarModel>>();
             Calendars = response;
         }
 
         public async Task<CalendarModel> GetCalendarAsync(int id)
         {
-            var result = await _http.GetFromJsonAsync<CalendarModel>($"");
+            var result = await _http.GetFromJsonAsync<CalendarModel>($"/api/CalendarModels/{id}");
             if (result != null)
                 return result;
             return null;
@@ -37,14 +37,14 @@ namespace ShiftCalendar.Data.Services
 
         public async Task GetCalendarsAsync()
         {
-            var result = await _http.GetFromJsonAsync<List<CalendarModel>>("");
+            var result = await _http.GetFromJsonAsync<List<CalendarModel>>("/api/CalendarModels");
             Calendars = result;
 
         }
 
         public async Task UpdateCalendar(int id, CalendarModel model)
         {
-            var result = await _http.PutAsJsonAsync($"", model);
+            var result = await _http.PutAsJsonAsync($"/api/CalendarModels/{id}", model);
             var response = await result.Content.ReadFromJsonAsync<List<CalendarModel>>();
             Calendars = response;
         }

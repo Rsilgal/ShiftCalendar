@@ -16,33 +16,33 @@ namespace ShiftCalendar.Data.Services
 
         public async Task CreateSecuency(SecuencyModel secuency)
         {
-            var result = await _http.PostAsJsonAsync("", secuency);
+            var result = await _http.PostAsJsonAsync("/api/SecuencyModels", secuency);
             var response = await result.Content.ReadFromJsonAsync<List<SecuencyModel>>();
             Secuencies = response;
         }
 
         public async Task DeleteSecuencyAsync(int id)
         {
-            var result = await _http.DeleteAsync($"");
+            var result = await _http.DeleteAsync($"/api/SecuencyModels/{id}");
             var response = await result.Content.ReadFromJsonAsync<List<SecuencyModel>>();
             Secuencies = response;
         }
 
         public async Task GetSecuenciesAsync()
         {
-            var result = await _http.GetFromJsonAsync<List<SecuencyModel>>("");
+            var result = await _http.GetFromJsonAsync<List<SecuencyModel>>("/api/SecuencyModels");
             Secuencies = result;
         }
 
         public async Task<SecuencyModel> GetSecuencyAsync(int id)
         {
-            var result = await _http.GetFromJsonAsync<SecuencyModel>($"");
+            var result = await _http.GetFromJsonAsync<SecuencyModel>($"/api/SecuencyModels/{id}");
             return result;
         }
 
         public async Task UpdateSecuencyAsync(int id, SecuencyModel secuency)
         {
-            var result = await _http.PutAsJsonAsync($"", secuency);
+            var result = await _http.PutAsJsonAsync($"/api/SecuencyModels/{id}", secuency);
             var response = await result.Content.ReadFromJsonAsync<List<SecuencyModel>>();
             Secuencies = response;
         }
