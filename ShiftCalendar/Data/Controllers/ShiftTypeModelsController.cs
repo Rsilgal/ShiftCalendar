@@ -45,7 +45,7 @@ namespace ShiftCalendar.Data.Controllers
         // PUT: api/ShiftTypeModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutShiftTypeModel(int id, ShiftTypeModel shiftTypeModel)
+        public async Task<ActionResult<IEnumerable<ShiftTypeModel>>> PutShiftTypeModel(int id, ShiftTypeModel shiftTypeModel)
         {
             if (id != shiftTypeModel.Id)
             {
@@ -70,23 +70,27 @@ namespace ShiftCalendar.Data.Controllers
                 }
             }
 
-            return NoContent();
+            //return NoContent();
+            var shiftsType = await GetShiftTypes();
+            return Ok(shiftsType);
         }
 
         // POST: api/ShiftTypeModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ShiftTypeModel>> PostShiftTypeModel(ShiftTypeModel shiftTypeModel)
+        public async Task<ActionResult<IEnumerable<ShiftTypeModel>>> PostShiftTypeModel(ShiftTypeModel shiftTypeModel)
         {
             _context.ShiftTypes.Add(shiftTypeModel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetShiftTypeModel", new { id = shiftTypeModel.Id }, shiftTypeModel);
+            //return CreatedAtAction("GetShiftTypeModel", new { id = shiftTypeModel.Id }, shiftTypeModel);
+            var shiftsType = await GetShiftTypes();
+            return Ok(shiftsType);
         }
 
         // DELETE: api/ShiftTypeModels/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteShiftTypeModel(int id)
+        public async Task<ActionResult<IEnumerable<ShiftTypeModel>>> DeleteShiftTypeModel(int id)
         {
             var shiftTypeModel = await _context.ShiftTypes.FindAsync(id);
             if (shiftTypeModel == null)
@@ -97,7 +101,9 @@ namespace ShiftCalendar.Data.Controllers
             _context.ShiftTypes.Remove(shiftTypeModel);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            //return NoContent();
+            var shiftsType = await GetShiftTypes();
+            return Ok(shiftsType);
         }
 
         private bool ShiftTypeModelExists(int id)

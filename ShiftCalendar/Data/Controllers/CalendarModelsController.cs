@@ -45,7 +45,7 @@ namespace ShiftCalendar.Data.Controllers
         // PUT: api/CalendarModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCalendarModel(int id, CalendarModel calendarModel)
+        public async Task<ActionResult<IEnumerable<CalendarModel>>> PutCalendarModel(int id, CalendarModel calendarModel)
         {
             if (id != calendarModel.Id)
             {
@@ -57,6 +57,8 @@ namespace ShiftCalendar.Data.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                var calendars = await GetCalendars();
+                return Ok(calendars);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -70,23 +72,25 @@ namespace ShiftCalendar.Data.Controllers
                 }
             }
 
-            return NoContent();
+            //return NoContent();
         }
 
         // POST: api/CalendarModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CalendarModel>> PostCalendarModel(CalendarModel calendarModel)
+        public async Task<ActionResult<IEnumerable<CalendarModel>>> PostCalendarModel(CalendarModel calendarModel)
         {
             _context.Calendars.Add(calendarModel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCalendarModel", new { id = calendarModel.Id }, calendarModel);
+            //return CreatedAtAction("GetCalendarModel", new { id = calendarModel.Id }, calendarModel);
+            var calendars = await GetCalendars();
+            return Ok(calendars);
         }
 
         // DELETE: api/CalendarModels/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCalendarModel(int id)
+        public async Task<ActionResult<IEnumerable<CalendarModel>>> DeleteCalendarModel(int id)
         {
             var calendarModel = await _context.Calendars.FindAsync(id);
             if (calendarModel == null)
@@ -97,7 +101,9 @@ namespace ShiftCalendar.Data.Controllers
             _context.Calendars.Remove(calendarModel);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            //return NoContent();
+            var calendars = await GetCalendars();
+            return Ok(calendars);
         }
 
         private bool CalendarModelExists(int id)

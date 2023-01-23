@@ -45,7 +45,7 @@ namespace ShiftCalendar.Data.Controllers
         // PUT: api/PersonModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPersonModel(int id, PersonModel personModel)
+        public async Task<ActionResult<IEnumerable<PersonModel>>> PutPersonModel(int id, PersonModel personModel)
         {
             if (id != personModel.Id)
             {
@@ -57,6 +57,8 @@ namespace ShiftCalendar.Data.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                var people = await GetPersons();
+                return Ok(people);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -70,23 +72,25 @@ namespace ShiftCalendar.Data.Controllers
                 }
             }
 
-            return NoContent();
+            //return NoContent();
         }
 
         // POST: api/PersonModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<PersonModel>> PostPersonModel(PersonModel personModel)
+        public async Task<ActionResult<IEnumerable<PersonModel>>> PostPersonModel(PersonModel personModel)
         {
             _context.Persons.Add(personModel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPersonModel", new { id = personModel.Id }, personModel);
+            //return CreatedAtAction("GetPersonModel", new { id = personModel.Id }, personModel);
+            var people = await GetPersons();
+            return Ok(people);
         }
 
         // DELETE: api/PersonModels/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePersonModel(int id)
+        public async Task<ActionResult<IEnumerable<PersonModel>>> DeletePersonModel(int id)
         {
             var personModel = await _context.Persons.FindAsync(id);
             if (personModel == null)
@@ -97,7 +101,9 @@ namespace ShiftCalendar.Data.Controllers
             _context.Persons.Remove(personModel);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            //return NoContent();
+            var people = await GetPersons();
+            return Ok(people);
         }
 
         private bool PersonModelExists(int id)

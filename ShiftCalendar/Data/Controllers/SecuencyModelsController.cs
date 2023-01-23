@@ -45,7 +45,7 @@ namespace ShiftCalendar.Data.Controllers
         // PUT: api/SecuencyModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSecuencyModel(int id, SecuencyModel secuencyModel)
+        public async Task<ActionResult<IEnumerable<SecuencyModel>>> PutSecuencyModel(int id, SecuencyModel secuencyModel)
         {
             if (id != secuencyModel.Id)
             {
@@ -70,23 +70,27 @@ namespace ShiftCalendar.Data.Controllers
                 }
             }
 
-            return NoContent();
+            //return NoContent();
+            var secuencies = await GetSecuencies();
+            return Ok(secuencies);
         }
 
         // POST: api/SecuencyModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<SecuencyModel>> PostSecuencyModel(SecuencyModel secuencyModel)
+        public async Task<ActionResult<IEnumerable<SecuencyModel>>> PostSecuencyModel(SecuencyModel secuencyModel)
         {
             _context.Secuencies.Add(secuencyModel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSecuencyModel", new { id = secuencyModel.Id }, secuencyModel);
+            //return CreatedAtAction("GetSecuencyModel", new { id = secuencyModel.Id }, secuencyModel);
+            var secuencies = await GetSecuencies();
+            return Ok(secuencies);
         }
 
         // DELETE: api/SecuencyModels/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSecuencyModel(int id)
+        public async Task<ActionResult<IEnumerable<SecuencyModel>>> DeleteSecuencyModel(int id)
         {
             var secuencyModel = await _context.Secuencies.FindAsync(id);
             if (secuencyModel == null)
@@ -97,7 +101,9 @@ namespace ShiftCalendar.Data.Controllers
             _context.Secuencies.Remove(secuencyModel);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            //return NoContent();
+            var secuencies = await GetSecuencies();
+            return Ok(secuencies);
         }
 
         private bool SecuencyModelExists(int id)

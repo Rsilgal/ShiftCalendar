@@ -45,7 +45,7 @@ namespace ShiftCalendar.Data.Controllers
         // PUT: api/ShiftModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutShiftModel(int id, ShiftModel shiftModel)
+        public async Task<ActionResult<IEnumerable<ShiftModel>>> PutShiftModel(int id, ShiftModel shiftModel)
         {
             if (id != shiftModel.Id)
             {
@@ -70,23 +70,27 @@ namespace ShiftCalendar.Data.Controllers
                 }
             }
 
-            return NoContent();
+            //return NoContent();
+            var shifts = await GetShifts();
+            return Ok(shifts);
         }
 
         // POST: api/ShiftModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ShiftModel>> PostShiftModel(ShiftModel shiftModel)
+        public async Task<ActionResult<IEnumerable<ShiftModel>>> PostShiftModel(ShiftModel shiftModel)
         {
             _context.Shifts.Add(shiftModel);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetShiftModel", new { id = shiftModel.Id }, shiftModel);
+            //return CreatedAtAction("GetShiftModel", new { id = shiftModel.Id }, shiftModel);
+            var shifts = await GetShifts();
+            return Ok(shifts);
         }
 
         // DELETE: api/ShiftModels/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteShiftModel(int id)
+        public async Task<ActionResult<IEnumerable<ShiftModel>>> DeleteShiftModel(int id)
         {
             var shiftModel = await _context.Shifts.FindAsync(id);
             if (shiftModel == null)
@@ -97,7 +101,9 @@ namespace ShiftCalendar.Data.Controllers
             _context.Shifts.Remove(shiftModel);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            //return NoContent();
+            var shifts = await GetShifts();
+            return Ok(shifts);
         }
 
         private bool ShiftModelExists(int id)
